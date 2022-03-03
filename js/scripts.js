@@ -1,4 +1,5 @@
-alert('Hello World');
-
-let favoriteFood = 'Pizza';
-document.write(favoriteFood)
+let pokemonList = [
+    {name: 'Charmander',height: .6,types: 'Fire'},
+    {name: 'Squirtle',height: .5,types: 'Water'},
+    {name: 'Jigglypuff',height: .5,types: ['Fairy', 'Normal']}
+]

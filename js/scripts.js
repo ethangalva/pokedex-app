@@ -11,7 +11,14 @@ let pokemonRepository = (function () {
     }
     //pushes new pokemons onto the array
     function add(item) {
-        pokemonList.push(item);
+        if (typeof item == "string") {
+            pokemonList.push(item);
+        } else {
+            console.log("item is not a string");
+        }
+        
+        
+
     }
 
     //returns the values of the functions for them to be called outside of the IIFE
@@ -27,5 +34,5 @@ pokemonRepository.getAll().forEach(function(pokemon){
   });
 //Add pokemon to the end of the array
 console.log(pokemonRepository.getAll());
-pokemonRepository.add("Ethan");
+pokemonRepository.add(9);
 console.log(pokemonRepository.getAll());

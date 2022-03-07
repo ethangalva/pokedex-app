@@ -11,27 +11,53 @@ let pokemonRepository = (function () {
     }
     //pushes new pokemons onto the array
     function add(item) {
-        if (typeof item == "string") {
+        //checks if inserted text is an object
+        if (typeof item === 'object') {
             pokemonList.push(item);
         } else {
-            console.log("item is not a string");
+            return false;
         }
-        
-        
+    }
 
+    function addListItem(pokemon){
+        //assigns ul to variable
+        let list = document.querySelector('.pokemon-list');
+        //creates li 
+        let listItem = document.createElement('li');
+        //creates button 
+        let button = document.createElement('button');
+        //assigns inner text for button
+        button.innerText = pokemon.name;
+        //adds class "pokemons" to buttons
+        button.classList.add('pokemons');
+        //assigns button as child to newly created li item
+        listItem.appendChild(button);
+        //assigns li to ul
+        list.appendChild(listItem);
+        //show details about pokemon when clicked
+        button.addEventListener('click', function() {
+            showDetails(pokemon);
+        })
+    }
+    //displays details of the pokemon in the paramenter (clicked)
+    function showDetails(pokemon) {
+        console.log(pokemon);
     }
 
     //returns the values of the functions for them to be called outside of the IIFE
     return {
         add: add,
-        getAll: getAll
+        getAll: getAll,
+        addListItem: addListItem,
+        showDetails: showDetails
     }
 
 })();
-//Print pokemons information in main body of html
+
 pokemonRepository.getAll().forEach(function(pokemon){
-    document.write(pokemon.name + " height: "+ pokemon.height + ", " + "<br/>");
+    pokemonRepository.addListItem(pokemon);
   });
+
 //Add pokemon to the end of the array
 console.log(pokemonRepository.getAll());
 pokemonRepository.add(9);

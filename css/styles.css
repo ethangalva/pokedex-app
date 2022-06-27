@@ -1,17 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+:root {
+    --background-color: #fff;
+    --font-color: #000;
+    --button-border: #000;
+    --font-size: 1em;
+    --font-size-button: 1.2em;
+    --font-size-h2: 1.5em;
+    --font-size-h1: 2.5em;
+    --font-size-title: 3em;
+}
+html {
+    scroll-behavior: smooth;
+    padding: 10px;
+}
+body {
+    background-color: var(--background-color);
+    font-family: 'Staatliches', cursive;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+p {
+    font-size: var(--font-size);
+}
+h2 {
+    font-size: var(--font-size-h2);
+}
+h1 {
+    font-size: var(--font-size-h1);
+}
+
+
+
+
+ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+}
 .pokemons {
-    background-color: lightblue;
-    border: 2px solid rgb(32, 32, 32);
+    background-color: #91c9a6;
     color: black;
     text-align: center;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 24px;
+    font-family: 'Staatliches', cursive;
+    width: 100%;
+
 }
 .pokemons:hover {
     cursor: pointer;
 }
-ul {
-    list-style-type: none;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
+

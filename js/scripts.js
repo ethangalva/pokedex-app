@@ -1,26 +1,77 @@
 let pokemonRepository = (function () {
     let pokemonList = [];
     let apiURL = 'https://pokeapi.co/api/v2/pokemon/';
-
-    //returns all information of pokemons
-    function getAll() {
-        return pokemonList;
-    }
-
-    //pushes new pokemons onto the array
-    function add(item) {
-        //checks if inserted text is an object
-        if (typeof item === 'object') {
-            pokemonList.push(item);
-        } else {
-            return false;
-        }
-    }
-
-
     let modalContainer = document.querySelector('#modal-container');
 
-    // displays details of the pokemon in the paramenter (clicked) [in console]
+    // function to get api response and transform it into JS object with keys
+    function loadList() { 
+        return fetch(apiURL).then(function (response) { // gets JSON data 
+            return response.json(); // transforms it into JS object
+        }).then(function (json) { 
+            json.results.forEach(function (item) { // for each item it runs the following function
+                let pokemon = {
+                    name: item.name,
+                    detailsURL: item.url
+                };
+                add(pokemon); // adds each object inside of the data from JSON into out array
+            }); 
+        }).catch(function (e) {
+            console.error(e);
+        });
+    }
+
+    // function to load second api from the detailsURL obtained from first API key
+    function loadDetails(pokemon) {
+        let url = pokemon.detailsURL;
+        return fetch(url).then(function (response) {
+            return response.json();
+        }).then(function (details) {
+            pokemon.imageURL = details.sprites.other.dream_world.front_default; // adds URL to img to the pokemon object inside of the array under the key [imageURL]
+            pokemon.height = details.height; // adds height data to the object in the array u nder the key [height]
+            pokemon.types = details.types; // gets the types of the pokemon
+            pokemon.id = details.id; // gets id 
+            pokemon.speciesURL = details.species.url; // url to get color info about pokemon
+            loadSpeciesInfo(pokemon);
+        }).catch(function (e) {
+            console.log(e);
+        });
+        
+    }
+
+    //displays pokemons in html body as buttons
+    function addListItem(pokemon){
+        //assigns ul to variable
+        let list = document.querySelector('.list-group');
+        //creates button 
+        let button = document.createElement('button');
+        button.classList.add('list-group-item')
+        button.classList.add('pokemons');
+        button.classList.add('list-group-item-action');
+        
+        //assigns inner text for button
+        button.innerText = pokemon.name;
+        // creates img 
+        let imgThumbnail = document.createElement('img');
+        imgThumbnail.classList.add('imgThumbnail');
+        imgThumbnail.src = pokemon.imageURL;
+        // creates h2 for id
+        let idThumbnail = document.createElement('h2');
+        idThumbnail.innerText = '#' + pokemon.id;
+        idThumbnail.classList.add('idThumbnail')
+        
+        // assigns idThumbnail as buttons child
+        button.appendChild(idThumbnail);
+        // assigns img as buttons child
+        button.appendChild(imgThumbnail);
+        //assigns li as child to ul
+        list.appendChild(button);
+        //show details about pokemon when clicked
+        button.addEventListener('click', function() {
+            showDetails(pokemon);
+        }); 
+    }
+
+    // displays details of the pokemon in a modal
     function showDetails(pokemon) { // from api
         loadDetails(pokemon).then(function () {
             console.log(pokemon);
@@ -56,7 +107,8 @@ let pokemonRepository = (function () {
         });
     }
 
-    function hideModal() { // we call this function whenThe user clicks Close button/presses the Esc key/clicks outside of the modal
+    // we call this function whenThe user clicks Close button/presses the Esc key/clicks outside of the modal
+    function hideModal() { 
         modalContainer.classList.remove('is-visible'); // removes class that makes the modal visible
 
         let dialogPromiseReject;
@@ -67,6 +119,7 @@ let pokemonRepository = (function () {
         }
     }
 
+    // hides modal when x is clicked
     modalContainer.addEventListener('click', (e) => {
         // Since this is also triggered when clicking INSIDE the modal
         // We only want to close if the user clicks directly on the overlay
@@ -76,99 +129,42 @@ let pokemonRepository = (function () {
         }
     });
 
+    // hides modal when chicled outside of it and is visible
     window.addEventListener('keydown', (e) => { // listens for key down
         if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) { // if keydown is escape and modalContainer has class is-visible
             hideModal(); // this runs if true
         }
     });
 
-    // //displays pokemons in html body as buttons
-    // function addListItem(pokemon){
-    //     //assigns ul to variable
-    //     let list = document.querySelector('.pokemon-list');
-    //     //creates li 
-    //     let listItem = document.createElement('li');
-    //     //creates button 
-    //     let button = document.createElement('button');
-    //     //assigns inner text for button
-    //     button.innerText = pokemon.name;
-    //     //adds class "pokemons" to buttons
-    //     button.classList.add('pokemons');
-    //     //assigns button as child to newly created li item
-    //     listItem.appendChild(button);
-    //     //assigns li as child to ul
-    //     list.appendChild(listItem);
-    //     //show details about pokemon when clicked
-    //     button.addEventListener('click', function() {
-    //         showDetails(pokemon);
-    //     }); 
-    // }
-
-    //displays pokemons in html body as buttons
-    function addListItem(pokemon){
-        //assigns ul to variable
-        let list = document.querySelector('.pokemon-list');
-        //creates li 
-        let listItem = document.createElement('li');
-        //creates button 
-        let button = document.createElement('button');
-        //assigns inner text for button
-        button.innerText = pokemon.name;
-        //adds class "pokemons" to buttons
-        button.classList.add('pokemons');
-        // creates img 
-        let imgThumbnail = document.createElement('img');
-        imgThumbnail.classList.add('imgThumbnail');
-        imgThumbnail.src = pokemon.imageURL;
-        // creates h2 for id
-        let idThumbnail = document.createElement('h2');
-        idThumbnail.innerText = '#' + pokemon.id;
-
-        
-
-        // assigns idThumbnail as buttons child
-        button.appendChild(idThumbnail);
-        // assigns img as buttons child
-        button.appendChild(imgThumbnail);
-        // assigns button as child of li
-        listItem.appendChild(button);
-        //assigns li as child to ul
-        list.appendChild(listItem);
-        //show details about pokemon when clicked
-        button.addEventListener('click', function() {
-            showDetails(pokemon);
-        }); 
-    }
-    
-    function loadList() { // function to get api response and transform it into JS object with keys
-        return fetch(apiURL).then(function (response) { // gets JSON data 
-            return response.json(); // transforms it into JS object
-        }).then(function (json) { 
-            json.results.forEach(function (item) { // for each item it runs the following function
-                let pokemon = {
-                    name: item.name,
-                    detailsURL: item.url
-                };
-                add(pokemon); // adds each object inside of the data from JSON into out array
-            }); 
-        }).catch(function (e) {
-            console.error(e);
-        });
+    //returns all information of pokemons
+    function getAll() {
+        return pokemonList;
     }
 
-    function loadDetails(pokemon) {
-        let url = pokemon.detailsURL;
+    //pushes new pokemons onto the array
+    function add(item) {
+        //checks if inserted text is an object
+        if (typeof item === 'object') {
+            pokemonList.push(item);
+        } else {
+            return false;
+        }
+    }
+
+    // gets species color from pokemon.speciesURL
+    function loadSpeciesInfo(pokemon) {
+        let url = pokemon.speciesURL;
         return fetch(url).then(function (response) {
             return response.json();
-        }).then(function (details) {
-            pokemon.imageURL = details.sprites.other.dream_world.front_default; // adds URL to img to the pokemon object inside of the array under the key [imageURL]
-            pokemon.height = details.height; // adds height data to the object in the array u nder the key [height]
-            pokemon.types = details.types; // gets the types of the pokemon
-            pokemon.id = details.id; // gets id 
+        }).then(function (species) {
+            pokemon.color = species.color.name; // gets color of pokemon 
         }).catch(function (e) {
             console.log(e);
         });
     }
+
+    // red, blue, yellow, green, black, brown, purple, gray, white, pink
+
 
     //returns the values of the functions for them to be called outside of the IIFE
     return {
@@ -177,25 +173,17 @@ let pokemonRepository = (function () {
         loadList: loadList,
         loadDetails: loadDetails,
         addListItem: addListItem,
-        showDetails: showDetails
+        showDetails: showDetails,
+        loadSpeciesInfo: loadSpeciesInfo
     };
-
 })();
-
-
-
-// pokemonRepository.loadList().then(function() {
-//     pokemonRepository.getAll().forEach(function(pokemon) {
-//         pokemonRepository.loadDetails(pokemon); // loads extra details of each pokemon
-//         pokemonRepository.addListItem(pokemon);
-//     });
-// })
 
 // pokemonRepository.loadList().then(function() {
 //     pokemonRepository.getAll().forEach(function(pokemon) {
 //         pokemonRepository.loadDetails(pokemon).then(function () {
 //             pokemonRepository.addListItem(pokemon);
-//         })// loads extra details of each pokemon
+
+//         });// loads extra details of each pokemon
 //     });
 // })
 
@@ -203,7 +191,7 @@ pokemonRepository.loadList().then(function() {
     pokemonRepository.getAll().forEach(function(pokemon) {
         pokemonRepository.loadDetails(pokemon).then(function () {
             pokemonRepository.addListItem(pokemon);
-        })// loads extra details of each pokemon
+        });// loads extra details of each pokemon
     });
 })
 

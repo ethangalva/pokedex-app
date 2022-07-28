@@ -18,64 +18,71 @@ html {
 }
 body {
   background-color: var(--background-color);
-  font-family: 'Staatliches', cursive;
+  font-family: 'Staatliches', arial;
   height: 100%;
   width: 100%;
   display: grid;
 }
-.main-container {
-  
-}
-p {
-    font-size: var(--font-size);
-}
-h2 {
-    font-size: var(--font-size-h2);
-}
-h1 {
-    font-size: var(--font-size-h1);
+
+
+.navbar > .navbar-brand {
+  color: #db5b53;
 }
 
 
-
-
-/* ul {
-    list-style-type: none;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    width: 100%;
-} */
-ul {
-  list-style-type: none;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  padding: 0px 25px;
+.list-group {
+  padding: 0px .5rem;
+  gap: .5em;
 }
 .pokemons {
-  background-color: #c4e4d4;
+  background-color: #91caa6;
   color: black;
   text-align: center;
   text-decoration: none;
   font-size: 24px;
-  font-family: 'Staatliches', cursive;
+  font-family: 'Staatliches', arial;
   width: 100%;
-  border-radius: 10px;
-  display: flex;
+  display: grid;
+  grid-template-areas: 
+  "img name name"
+  "img type id";
+  justify-content: start;
+  border-radius: 5px;
   align-items: center;
-  flex-direction: column;
-  height: 100%;
-  padding: 5px;
+  color: #fff;
 }
+
 .pokemons:hover {
   cursor: pointer;
 }
 .imgThumbnail {
   max-height: 75px;
   max-width: 75px;
+  margin-right: 10px;
   grid-area: img;
 }
+.idThumbnail {
+  grid-area: id;
+}
+
+/* OVERWRITE OF BOOTSTRAP CLASES  */
+.form-inline {
+  flex-wrap: nowrap;
+  width: 100%;
+  gap: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* MODAL STYLING */
 #modal-container {

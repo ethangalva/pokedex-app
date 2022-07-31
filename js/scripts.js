@@ -31,11 +31,9 @@ let pokemonRepository = (function () {
             pokemon.types = details.types; // gets the types of the pokemon
             pokemon.id = details.id; // gets id 
             pokemon.speciesURL = details.species.url; // url to get color info about pokemon
-            loadSpeciesInfo(pokemon);
         }).catch(function (e) {
             console.log(e);
         });
-        
     }
 
     //displays pokemons in html body as buttons
@@ -66,7 +64,8 @@ let pokemonRepository = (function () {
         idThumbnail.innerText = '#' + addLeadingZeros(pokemon.id, 3); // checks for id lenght and adds 0s to make a 3 digit number
         idThumbnail.classList.add('idThumbnail')
 
-
+        let colorClassAdd = addColor(pokemon);
+        button.classList.add(colorClassAdd);
 
         // assigns idThumbnail as buttons child
         button.appendChild(idThumbnail);
@@ -209,7 +208,32 @@ let pokemonRepository = (function () {
         });
     }
 
-    
+    // based on color id, add class to button for background
+    function addColor(pokemon) {
+        let color = pokemon.colorID;
+
+        if (color === 1) {
+            return "colorBlack-1";
+        } else if (color === 2) {
+            return "colorBlue-2";
+        } else if (color === 3) {
+            return "colorBrown-3";
+        } else if (color === 4) {
+            return "colorGray-4";
+        } else if (color === 5) {
+            return "colorGreen-5";
+        } else if (color === 6) {
+            return "colorPink-6";
+        } else if (color === 7) {
+            return "colorPurple-7";
+        } else if (color === 8) {
+            return "colorRed-8";
+        } else if (color === 9) {
+            return "colorWhite-9";
+        } else if (color === 10) {
+            return "colorYellow-10";
+        }
+    }
 
     //returns the values of the functions for them to be called outside of the IIFE
     return {
@@ -219,7 +243,8 @@ let pokemonRepository = (function () {
         loadDetails: loadDetails,
         addListItem: addListItem,
         showDetails: showDetails,
-        loadSpeciesInfo: loadSpeciesInfo
+        loadSpeciesInfo: loadSpeciesInfo,
+        addColor: addColor
     };
 })();
 
@@ -227,7 +252,26 @@ let pokemonRepository = (function () {
 pokemonRepository.loadList().then(function() {
     pokemonRepository.getAll().forEach(function(pokemon) {
         pokemonRepository.loadDetails(pokemon).then(function () {
-            pokemonRepository.addListItem(pokemon);
+            pokemonRepository.loadSpeciesInfo(pokemon).then(function() {
+                pokemonRepository.addListItem(pokemon);
+            });
         });// loads extra details of each pokemon
     });
 })
+
+// // parent function that displays and loads information from the api
+// pokemonRepository.loadList().then(function() {
+//     pokemonRepository.getAll().forEach(function(pokemon) {
+//         pokemonRepository.loadDetails(pokemon).then(function () {
+//             pokemonRepository.loadSpeciesInfo(pokemon);
+//             pokemonRepository.addListItem(pokemon);
+//         });// loads extra details of each pokemon
+//     });
+// })
+
+
+
+
+// TODO: 
+// -modal: id, heigth, color, types
+// -thumbnail: id styling, types st

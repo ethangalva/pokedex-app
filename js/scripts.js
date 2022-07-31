@@ -47,6 +47,13 @@ let pokemonRepository = (function () {
         button.classList.add('list-group-item')
         button.classList.add('pokemons');
         button.classList.add('list-group-item-action');
+
+        button.classList.add('btn');
+        button.classList.add('btn-primary')
+
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('type', 'button');
+        button.setAttribute('data-target', '.modal')
         
         //assigns inner text for button
         button.innerText = pokemon.name;
@@ -56,9 +63,11 @@ let pokemonRepository = (function () {
         imgThumbnail.src = pokemon.imageURL;
         // creates h2 for id
         let idThumbnail = document.createElement('h2');
-        idThumbnail.innerText = '#' + pokemon.id;
+        idThumbnail.innerText = '#' + addLeadingZeros(pokemon.id, 3); // checks for id lenght and adds 0s to make a 3 digit number
         idThumbnail.classList.add('idThumbnail')
-        
+
+
+
         // assigns idThumbnail as buttons child
         button.appendChild(idThumbnail);
         // assigns img as buttons child
@@ -73,39 +82,138 @@ let pokemonRepository = (function () {
 
     // displays details of the pokemon in a modal
     function showDetails(pokemon) { // from api
-        loadDetails(pokemon).then(function () {
-            console.log(pokemon);
+        console.log(pokemon);
 
-            modalContainer.innerHTML = '';
+        modalContainer.innerHTML = '';
 
-            // here add code to generate the modal 
-            let modal = document.createElement('div');
-            modal.classList.add('modal')
+        // creates modal dialog 
+        let modalDialog = document.createElement('div');
+        modalDialog.classList.add('modal-dialog');
+        modalDialog.classList.add('modal-dialog-centered'); // this is to make it align vertically to the center 
+        modalDialog.setAttribute('role', 'document');
 
-            let closeButtonElement = document.createElement('button'); // creates close element
-            closeButtonElement.classList.add('modal-close'); // adds class to close button
-            closeButtonElement.innerHTML = 'Close'; // adds html code inside of button
-            closeButtonElement.addEventListener('click', hideModal) // runs hideModal function when cliked 
+        // here add code to generate the modal content [append to .modal-dialog]
+        let modal = document.createElement('div');
+        modal.classList.add('modal-content');
 
-            let titleElement = document.createElement('h1');
-            titleElement.innerText = pokemon.name;
+        // creates top section of modal for header
+        let modalHeader = document.createElement('div');
+        modalHeader.classList.add('modal-header');
+        // Header [ID]
+        let modalHeaderID = document.createElement('p');
+        modalHeaderID.classList.add('modal-id')
+        modalHeaderID.innerText = '#' + addLeadingZeros(pokemon.id, 3); // checks for id lenght and adds 0s to make a 3 digit number
+        // Header [title]
+        let modalHeaderTitle = document.createElement('h4');
+        modalHeaderTitle.classList.add('modal-title')
+        modalHeaderTitle.innerText = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); // uppercases the 1st letter
+        // Header [close button]
+        let modalHeaderClose = document.createElement('button');
+        modalHeaderClose.classList.add('close');
+        modalHeaderClose.setAttribute('type', 'button');
+        modalHeaderClose.setAttribute('data-dismiss', 'modal');
+        modalHeaderClose.setAttribute('aria-label', 'Close');
+        // Button [inside button]
+        let modalHeaderCloseSpan = document.createElement('span');
+        modalHeaderCloseSpan.setAttribute('aria-hidden', 'true');
+        modalHeaderCloseSpan.innerHTML = '&times;'; // adds x for close button 
 
-            let contentElement = document.createElement('p');
-            contentElement.innerText = 'Height: ' + pokemon.height/10 + ' meters' ;
+        // creates body section of modal for info
+        let modalBody = document.createElement('div');
+        modalBody.classList.add('modal-body');
+        // Body [IMG]
+        let modalBodyIMG = document.createElement('img');
+        modalBodyIMG.src = pokemon.imageURL;
+        modalBodyIMG.classList.add('modalIMG');
 
-            let imgElement = document.createElement('img');
-            imgElement.src = pokemon.imageURL;
-            imgElement.classList.add('imgPokemon')
 
-            modal.appendChild(closeButtonElement);
-            modal.appendChild(titleElement);
-            modal.appendChild(contentElement);
-            modal.appendChild(imgElement);
-            modalContainer.appendChild(modal);
+        // append to create modal
+        modalContainer.appendChild(modalDialog);
+        modalDialog.appendChild(modal);
+        
+        modal.appendChild(modalHeader);
+        modalHeader.appendChild(modalHeaderID);
+        modalHeader.appendChild(modalHeaderTitle);
+        modalHeader.appendChild(modalHeaderClose);
+        modalHeaderClose.appendChild(modalHeaderCloseSpan);
 
-            modalContainer.classList.add('is-visible');
-        });
+        modal.appendChild(modalBody);
+        modalBody.appendChild(modalBodyIMG);
+
+
     }
+
+// stayed on modal creation needed to add to function to generate new modal model from bootstrap documentation from the
+// LIVE DEMO section https://getbootstrap.com/docs/4.2/components/modal/
+
+
+
+
+
+
+
+
+
+
+// checks for id lenght and adds 0s to make a 3 digit number
+function addLeadingZeros(num, totalLength) {
+    return String(num).padStart(totalLength, '0');
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // // displays details of the pokemon in a modal
+    // function showDetails(pokemon) { // from api
+    //     console.log(pokemon);
+
+    //     modalContainer.innerHTML = '';
+
+    //     // here add code to generate the modal content [append to .modal-dialog]
+    //     let modal = document.createElement('div');
+    //     modal.classList.add('modal-content');
+
+    //     let closeButtonElement = document.createElement('button'); // creates close element
+    //     closeButtonElement.classList.add('modal-close'); // adds class to close button
+    //     closeButtonElement.innerHTML = 'Close'; // adds html code inside of button
+    //     closeButtonElement.addEventListener('click', hideModal) // runs hideModal function when cliked
+
+    //     let titleElement = document.createElement('h1');
+    //     titleElement.innerText = pokemon.name;
+
+    //     let contentElement = document.createElement('p');
+    //     contentElement.innerText = 'Height: ' + pokemon.height/10 + ' meters' ;
+
+    //     let imgElement = document.createElement('img');
+    //     imgElement.src = pokemon.imageURL;
+    //     imgElement.classList.add('imgPokemon')
+
+    //     modal.appendChild(closeButtonElement);
+    //     modal.appendChild(titleElement);
+    //     modal.appendChild(contentElement);
+    //     modal.appendChild(imgElement);
+    //     modalContainer.appendChild(modal);
+
+    //     modalContainer.classList.add('is-visible');
+    // }
+
+
+
+
 
     // we call this function whenThe user clicks Close button/presses the Esc key/clicks outside of the modal
     function hideModal() { 
@@ -157,14 +265,18 @@ let pokemonRepository = (function () {
         return fetch(url).then(function (response) {
             return response.json();
         }).then(function (species) {
-            pokemon.color = species.color.name; // gets color of pokemon 
+            pokemon.colorID = species.color.url; // gets color of pokemon 
+
+            // converts link into a id from 1-10
+            pokemon.colorID = pokemon.colorID.replace("https://pokeapi.co/api/v2/pokemon-color/", "");
+            pokemon.colorID = pokemon.colorID.replace("/", "");
+            pokemon.colorID = parseInt(pokemon.colorID);
         }).catch(function (e) {
             console.log(e);
         });
     }
 
-    // red, blue, yellow, green, black, brown, purple, gray, white, pink
-
+    
 
     //returns the values of the functions for them to be called outside of the IIFE
     return {
@@ -178,15 +290,7 @@ let pokemonRepository = (function () {
     };
 })();
 
-// pokemonRepository.loadList().then(function() {
-//     pokemonRepository.getAll().forEach(function(pokemon) {
-//         pokemonRepository.loadDetails(pokemon).then(function () {
-//             pokemonRepository.addListItem(pokemon);
-
-//         });// loads extra details of each pokemon
-//     });
-// })
-
+// parent function that displays and loads information from the api
 pokemonRepository.loadList().then(function() {
     pokemonRepository.getAll().forEach(function(pokemon) {
         pokemonRepository.loadDetails(pokemon).then(function () {
@@ -194,6 +298,3 @@ pokemonRepository.loadList().then(function() {
         });// loads extra details of each pokemon
     });
 })
-
-// checks for information from api before calling modals
-console.log(pokemonRepository.getAll());

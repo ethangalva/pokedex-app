@@ -143,77 +143,10 @@ let pokemonRepository = (function () {
 
     }
 
-// stayed on modal creation needed to add to function to generate new modal model from bootstrap documentation from the
-// LIVE DEMO section https://getbootstrap.com/docs/4.2/components/modal/
-
-
-
-
-
-
-
-
-
-
-// checks for id lenght and adds 0s to make a 3 digit number
-function addLeadingZeros(num, totalLength) {
-    return String(num).padStart(totalLength, '0');
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // // displays details of the pokemon in a modal
-    // function showDetails(pokemon) { // from api
-    //     console.log(pokemon);
-
-    //     modalContainer.innerHTML = '';
-
-    //     // here add code to generate the modal content [append to .modal-dialog]
-    //     let modal = document.createElement('div');
-    //     modal.classList.add('modal-content');
-
-    //     let closeButtonElement = document.createElement('button'); // creates close element
-    //     closeButtonElement.classList.add('modal-close'); // adds class to close button
-    //     closeButtonElement.innerHTML = 'Close'; // adds html code inside of button
-    //     closeButtonElement.addEventListener('click', hideModal) // runs hideModal function when cliked
-
-    //     let titleElement = document.createElement('h1');
-    //     titleElement.innerText = pokemon.name;
-
-    //     let contentElement = document.createElement('p');
-    //     contentElement.innerText = 'Height: ' + pokemon.height/10 + ' meters' ;
-
-    //     let imgElement = document.createElement('img');
-    //     imgElement.src = pokemon.imageURL;
-    //     imgElement.classList.add('imgPokemon')
-
-    //     modal.appendChild(closeButtonElement);
-    //     modal.appendChild(titleElement);
-    //     modal.appendChild(contentElement);
-    //     modal.appendChild(imgElement);
-    //     modalContainer.appendChild(modal);
-
-    //     modalContainer.classList.add('is-visible');
-    // }
-
-
-
-
+    // checks for id lenght and adds 0s to make a 3 digit number
+    function addLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0');
+    }
 
     // we call this function whenThe user clicks Close button/presses the Esc key/clicks outside of the modal
     function hideModal() { 

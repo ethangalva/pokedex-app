@@ -43,44 +43,84 @@ body {
   font-family: 'Staatliches', arial;
   width: 100%;
   display: grid;
+  grid-template-columns: 75px 1fr 1fr;
   grid-template-areas: 
   "img name name"
-  "img type id";
+  "img types id";
   justify-content: start;
   border-radius: 5px;
   align-items: center;
   color: #fff;
+  text-shadow:
+   -2px -2px 0 #000,  
+    0px -2px 0 #000,
+    0px 0px 0 #000,
+    0px 0px 0 #000;
+  letter-spacing: 2px;
 }
 .pokemons:hover {
   cursor: pointer;
 }
 .imgThumbnail {
-  max-height: 75px;
-  max-width: 75px;
+  height: 75px;
+  width: 75px;
   margin-right: 10px;
   grid-area: img;
 }
 .idThumbnail {
   grid-area: id;
+  margin-bottom: 0px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* MODAL HEADER */
 .modal-header {
   display: grid;
   grid-template-areas: 
-  "id button"
-  "name name";
+  "name button"
+  "id button";
+  border-bottom: 2px solid black;
 }
 
 .modal-id {
   grid-area: id;
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 .modal-title {
   grid-area: name;
 }
 .close {
   grid-area: button;
+}
+
+/* MODAL BODY */
+.modal-body {
+  display: grid;
+  grid-template-areas: 
+  "image image"
+  "types types"
+  "abilities abilities"
+  "weight heigth";
+  letter-spacing: 1px;
+  justify-items: center;
+  gap: 10px;
+}
+
+.modalIMG {
+  grid-area: image;
+}
+.modalBodyTypes {
+  grid-area: types;
+}
+.modalBodyHeigth {
+  grid-area: heigth;
+}
+.modalBodyWeight {
+  grid-area: weight;
+}
+.modalBodyAbilities {
+  grid-area: abilities;
 }
 
 /* OVERWRITE OF BOOTSTRAP CLASES  */
@@ -99,9 +139,24 @@ body {
   color: #fff;
   text-decoration: none;
   background-color: rgba(0, 0, 0, 0.8);
-
+}
+.list-group {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
+@media screen and (min-width: 768px) {
+  .list-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (min-width: 992px) {
+  .list-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
 
 
 /* Backgound color based on api/pokemon type */

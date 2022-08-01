@@ -1,6 +1,6 @@
 let pokemonRepository = (function () {
     let pokemonList = [];
-    let apiURL = 'https://pokeapi.co/api/v2/pokemon/';
+    let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=300';
     let modalContainer = document.querySelector('#modal-container');
 
     // function to get api response and transform it into JS object with keys
@@ -28,8 +28,10 @@ let pokemonRepository = (function () {
         }).then(function (details) {
             pokemon.imageURL = details.sprites.other.dream_world.front_default; // adds URL to img to the pokemon object inside of the array under the key [imageURL]
             pokemon.height = details.height; // adds height data to the object in the array u nder the key [height]
-            pokemon.types = details.types; // gets the types of the pokemon
             pokemon.id = details.id; // gets id 
+            pokemon.weight = details.weight; // gets weight
+            pokemon.abilities = details.abilities.map((ability) => ability.ability.name).join(', ');
+            pokemon.types = details.types.map((name) => name.type.name).join(', ') ; // gets the types of the pokemon
             pokemon.speciesURL = details.species.url; // url to get color info about pokemon
         }).catch(function (e) {
             console.log(e);
@@ -53,19 +55,27 @@ let pokemonRepository = (function () {
         button.setAttribute('type', 'button');
         button.setAttribute('data-target', '.modal')
         
+        button.setAttribute('id', pokemon.id)
+
+        // adds class to change the background of thumbnail based on pokemon.colorID
+        let colorClassAdd = addColor(pokemon);
+        button.classList.add(colorClassAdd);
+
         //assigns inner text for button
         button.innerText = pokemon.name;
         // creates img 
         let imgThumbnail = document.createElement('img');
         imgThumbnail.classList.add('imgThumbnail');
         imgThumbnail.src = pokemon.imageURL;
+        imgThumbnail.setAttribute('alt', 'image of pokemon');
         // creates h2 for id
         let idThumbnail = document.createElement('h2');
         idThumbnail.innerText = '#' + addLeadingZeros(pokemon.id, 3); // checks for id lenght and adds 0s to make a 3 digit number
         idThumbnail.classList.add('idThumbnail')
 
-        let colorClassAdd = addColor(pokemon);
-        button.classList.add(colorClassAdd);
+
+
+
 
         // assigns idThumbnail as buttons child
         button.appendChild(idThumbnail);
@@ -98,6 +108,9 @@ let pokemonRepository = (function () {
         // creates top section of modal for header
         let modalHeader = document.createElement('div');
         modalHeader.classList.add('modal-header');
+        // adds color to header background
+        let colorClassAdd = addColor(pokemon);
+        modalHeader.classList.add(colorClassAdd);
         // Header [ID]
         let modalHeaderID = document.createElement('p');
         modalHeaderID.classList.add('modal-id')
@@ -124,6 +137,28 @@ let pokemonRepository = (function () {
         let modalBodyIMG = document.createElement('img');
         modalBodyIMG.src = pokemon.imageURL;
         modalBodyIMG.classList.add('modalIMG');
+        modalBodyIMG.classList.add('modalBodyItem');
+        // Body [Type]
+        let modalBodyTypes = document.createElement('h5');
+        modalBodyTypes.innerText = "Types: " + pokemon.types;
+        modalBodyTypes.classList.add('modalBodyTypes');
+        modalBodyTypes.classList.add('modalBodyItem');
+        // Body [Heigth]
+        let modalBodyHeigth = document.createElement('h5');
+        modalBodyHeigth.innerText = "Heigth: " + pokemon.height/10 + " meters";
+        modalBodyHeigth.classList.add('modalBodyHeigth');
+        modalBodyHeigth.classList.add('modalBodyItem');
+        // Body [Weigth]
+        let modalBodyWeight = document.createElement('h5');
+        modalBodyWeight.innerText = "Weight: " + pokemon.weight/10 + " pounds";
+        modalBodyWeight.classList.add('modalBodyWeight');
+        modalBodyWeight.classList.add('modalBodyItem');
+        // Body [Abilities]
+        let modalBodyAbilities = document.createElement('h5');
+        modalBodyAbilities.innerText = "Abilities: " + pokemon.abilities;
+        modalBodyAbilities.classList.add('modalBodyAbilities');
+        modalBodyAbilities.classList.add('modalBodyItem');
+
 
 
         // append to create modal
@@ -138,8 +173,10 @@ let pokemonRepository = (function () {
 
         modal.appendChild(modalBody);
         modalBody.appendChild(modalBodyIMG);
-
-
+        modalBody.appendChild(modalBodyHeigth);
+        modalBody.appendChild(modalBodyWeight);
+        modalBody.appendChild(modalBodyAbilities);
+        modalBody.appendChild(modalBodyTypes); 
     }
 
     // checks for id lenght and adds 0s to make a 3 digit number
@@ -233,6 +270,26 @@ let pokemonRepository = (function () {
         } else if (color === 10) {
             return "colorYellow-10";
         }
+    }
+
+    // assigns search id to variable and adds event listener for user input
+    const search = document.getElementById('search')
+    search.addEventListener('input', searchList);
+
+    // checks for input in search field and makes it work
+    function searchList() {
+        let searchInput = document.getElementById('search').value;
+        searchInput = searchInput.toLowerCase();
+        const listItems = $('button');
+        listItems.each(function() {
+            const item = $(this);
+            const name = item.text();
+            if (name.includes(searchInput)) {
+                item.show();
+            } else {
+                item.hide();
+            }
+        });
     }
 
     //returns the values of the functions for them to be called outside of the IIFE

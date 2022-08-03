@@ -109,6 +109,8 @@ body {
 
 .modalIMG {
   grid-area: image;
+  max-width: 300px;
+  max-height: 380px;
 }
 .modalBodyTypes {
   grid-area: types;
@@ -187,6 +189,6 @@ body {
 .colorWhite-9 {
   background-color: #dbdbdb;
 }
-.colorYellow10 {
+.colorYellow-10 {
   background-color: #e6e2a6;
 }
